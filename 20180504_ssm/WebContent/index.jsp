@@ -7,7 +7,7 @@
 <title>HTML5</title>
 </head>
 <body>
-	<a href = "${pageContext.request.contextPath}/alist">测试多对一</a><br/>
+	<a href = "${pageContext.request.contextPath}/alist">测试多对一111</a><br/>
 	<a href = "${pageContext.request.contextPath}/ainfo">测试一对多</a>
 </body>
 </html>
