@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+				"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace = "com.demo.mapper.TestMapper">
+	<resultMap type="com.demo.po.AuthorPO" id="author">
+		<!-- 表示主键映射 -->
+		<id property = "authorid" column = "authorid"/>
+		<!-- 其他列映射 -->
+		<result property = "aname" column = "aname"/>
+		<result property = "bname" column = "bname"/>
+		<result property = "sex" column = "sex"/>
+		<result property = "birthday" column = "birthday"/>
+		<result property = "tel" column = "phone"/>
+		<result property = "address" column = "address"/>
+		<result property = "aflag" column = "aflag"/>
+		<!-- 对象（复合的BEAN） -->
+		<association property="area" javaType="com.demo.po.AreaPO">
+			<id property = "areaid" column = "areaid"/>
+			<result property = "aname" column = "areaname"/>
+			<result property = "aflag" column = "areaflag"/>
+		</association>
+	</resultMap>
+	
+	<resultMap type="com.demo.po.AreaPO" id="area">
+		<id property = "areaid" column = "areaid"/>
+		<result property = "aname" column = "areaname"/>
+		<result property = "aflag" column = "areaflag"/>
+		
+		<!-- collection表示集合，ofType表示泛型<>  -->
+		<collection property="alist" ofType="com.demo.po.AuthorPO">
+			<id property = "authorid" column = "authorid"/>
+			<result property = "aname" column = "aname"/>
+			<result property = "bname" column = "bname"/>
+			<result property = "sex" column = "sex"/>
+			<result property = "birthday" column = "birthday"/>
+			<result property = "tel" column = "phone"/>
+			<result property = "address" column = "address"/>
+			<result property = "aflag" column = "aflag"/>
+		</collection>
+	</resultMap>
+
+	<select id="getAuthorList" resultMap = "author" >  
+		SELECT 
+			t.*,
+			a.areaid,
+			a.aname AS areaname,
+			a.aflag AS areaflag
+		FROM AUTHORS t
+		LEFT JOIN areas a ON(t.areaid = a.areaid)
+	</select>
+	
+	<select id="getAuthorList2" resultType = "com.demo.po.BigAuthorPO" >  
+		SELECT 
+			t.*,
+			a.aname AS areaname,
+			a.aflag AS areaflag
+		FROM AUTHORS t
+		LEFT JOIN areas a ON(t.areaid = a.areaid)
+	</select>
+	
+	<select id="getAreaById" resultMap="area" parameterType="int">
+		SELECT 
+			a.areaid,
+			a.aname AS areaname,
+			a.aflag AS areaflag,
+			t.*
+		FROM areas a
+			JOIN AUTHORS t ON (a.areaid = t.areaid)
+		WHERE a.areaid = #{id}
+	</select>
+</mapper>
